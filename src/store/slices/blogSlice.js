@@ -5,7 +5,8 @@ const initialState = {
         title : '',
         description : ''
     },
-    blogList : []
+    blogList : [],
+    currentEditedBlogId : null,
 }
 
 export const blogSlice = createSlice({
@@ -26,6 +27,7 @@ export const blogSlice = createSlice({
         },
 
         handleAddTodo: (state,action)=> {
+            console.log('handleEditedBlog is called');
             console.log(action);
             state.blogList.push({
                 id : nanoid(),
@@ -43,10 +45,47 @@ export const blogSlice = createSlice({
         setBlogListOnInitialLoad : (state, action)=> {
             //pass the list of blogs from the localStorage to the payload
             state.blogList = action.payload.blogList;
-        }
+        },
+
+        handleDeleteBlog: (state,action)=> {
+            console.log(action.payload);
+            const {payload} = action;
+            const {currentBlogId} = payload; 
+
+            let cpyBlogList = [...state.blogList];
+
+            cpyBlogList = cpyBlogList.filter(singleBlogItem => singleBlogItem.id !== currentBlogId);
+
+            state.blogList = cpyBlogList;
+            localStorage.setItem('blogList', JSON.stringify(cpyBlogList));
+        },
+
+        setCurrentEditedBlogId : (state,action)=> {
+            console.log(action.payload);
+            const {payload} = action;
+            const {currentBlogId} = payload; 
+
+            state.currentEditedBlogId = currentBlogId;
+        },
+
+        handleEditedBlog: (state, action)=> {
+            console.log('handleEditedBlog is called')
+
+            let cpyBlogList = [...state.blogList];
+            const findIndexOfCurrentBlogItem = cpyBlogList.findIndex(singleBlogItem=> singleBlogItem.id === state.currentEditedBlogId);
+
+            cpyBlogList[findIndexOfCurrentBlogItem] = {
+                ...cpyBlogList[findIndexOfCurrentBlogItem],
+                ...state.formData
+            };
+
+            state.blogList = cpyBlogList;
+            localStorage.setItem('blogList', JSON.stringify(cpyBlogList))
+        },
+
     }
 });
 
-export const {handleInputChange, handleAddTodo, setBlogListOnInitialLoad} = blogSlice.actions
+export const {handleInputChange, handleAddTodo, setBlogListOnInitialLoad, handleDeleteBlog, setCurrentEditedBlogId, handleEditedBlog} = blogSlice.actions
 
 export default blogSlice.reducer;

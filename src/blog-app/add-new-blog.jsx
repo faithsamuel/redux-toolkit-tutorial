@@ -1,11 +1,12 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { handleAddTodo, handleInputChange } from '../store/slices/blogSlice';
+import { handleAddTodo, handleEditedBlog, handleInputChange, setCurrentEditedBlogId } from '../store/slices/blogSlice';
 
 function AddNewBlog() {
 
     const {blog} = useSelector(state=>state)
     const dispatch = useDispatch();
+    const {currentEditedBlogId} = blog;
 
 
     function onChangeInput(e) {
@@ -16,7 +17,16 @@ function AddNewBlog() {
 
     function handleTodoSubmit(e) {
         e.preventDefault();
-        dispatch(handleAddTodo());
+        if(currentEditedBlogId !== null) dispatch(handleEditedBlog());
+        else dispatch(handleAddTodo());
+
+        if(currentEditedBlogId !== null) dispatch(setCurrentEditedBlogId({
+            currentBlogId : null,
+        }));
+        dispatch(handleInputChange({
+            description : '',
+            title : ''
+        }))
     }
 
   return (
@@ -60,7 +70,10 @@ function AddNewBlog() {
         type="submit" 
         className="w-full bg-black-500 text-white p-2 rounded hover:bg-blue-600 transition"
     >
-        Add New Blog
+       {
+        blog?.currentEditedBlogId ? 'Edit Blog' : 'Add New Blog'
+       } 
+
     </button>
 </form>
 

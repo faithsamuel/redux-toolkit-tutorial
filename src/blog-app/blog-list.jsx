@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setBlogListOnInitialLoad } from '../store/slices/blogSlice';
+import { handleDeleteBlog, handleInputChange, setBlogListOnInitialLoad, setCurrentEditedBlogId } from '../store/slices/blogSlice';
 
 function BlogList() {
 
@@ -15,6 +15,24 @@ function BlogList() {
             blogList : JSON.parse(localStorage.getItem('blogList')) || []
         }))
     },[])
+
+    function onDeleteBlog(getCurrentBlogId) {
+        console.log(getCurrentBlogId);
+        dispatch(handleDeleteBlog({
+            currentBlogId : getCurrentBlogId,
+        }))
+    }
+
+    function onEditBlog(getCurrentBlog) {
+        dispatch(setCurrentEditedBlogId({
+            currentBlogId : getCurrentBlog?.id,
+        }));
+
+        dispatch(handleInputChange({
+            title : getCurrentBlog?.title,
+            description : getCurrentBlog?.description,
+        }))
+    }
 
   return (
     <ul className="max-w-lg mx-auto mt-8 space-y-4">
@@ -31,13 +49,13 @@ function BlogList() {
                 <div className="flex justify-end gap-2">
                     <button 
                         className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600 transition"
-                        onClick={() => handleEdit(singleBlogItem?.id)}
+                        onClick={() => onEditBlog(singleBlogItem)}
                     >
                         Edit
                     </button>
                     <button 
                         className="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded hover:bg-red-600 transition"
-                        onClick={() => handleDelete(singleBlogItem?.id)}
+                        onClick={(e) => onDeleteBlog(singleBlogItem?.id)}
                     >
                         Delete
                     </button>

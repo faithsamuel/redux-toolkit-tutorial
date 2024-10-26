@@ -7,13 +7,15 @@ function App() {
 
 
   return (
-    <div>
-      <h1>Blog List App</h1>
-      <BlogList/>
-      <AddNewBlog/>
-      {/* <CounterButton/>
-      <COunterValue/> */}
-    </div>
+    <div className="min-h-screen bg-gray-50 py-10">
+    <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+    <span className="text-5xl inline-block align-middle">🅱️</span>log App 
+    </h1>
+    <AddNewBlog />
+    <BlogList />
+    {/* <CounterButton />
+    <CounterValue /> */}
+</div>
   )
 }
 

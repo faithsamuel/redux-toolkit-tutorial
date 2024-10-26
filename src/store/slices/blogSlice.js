@@ -1,10 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 
 const initialState = {
     formData : {
         title : '',
         description : ''
-    }
+    },
+    blogList : []
 }
 
 export const blogSlice = createSlice({
@@ -23,9 +24,29 @@ export const blogSlice = createSlice({
 
             state.formData = cpyFormData;
         },
+
+        handleAddTodo: (state,action)=> {
+            console.log(action);
+            state.blogList.push({
+                id : nanoid(),
+                ...state.formData,
+            });
+
+            state.formData = {
+                title: "",
+                description: "", 
+            }; 
+
+            localStorage.setItem('blogList', JSON.stringify(state.blogList))
+        },
+
+        setBlogListOnInitialLoad : (state, action)=> {
+            //pass the list of blogs from the localStorage to the payload
+            state.blogList = action.payload.blogList;
+        }
     }
 });
 
-export const {handleInputChange} = blogSlice.actions
+export const {handleInputChange, handleAddTodo, setBlogListOnInitialLoad} = blogSlice.actions
 
 export default blogSlice.reducer;

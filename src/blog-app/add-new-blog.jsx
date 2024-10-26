@@ -1,13 +1,12 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { handleInputChange } from '../store/slices/blogSlice';
+import { handleAddTodo, handleInputChange } from '../store/slices/blogSlice';
 
 function AddNewBlog() {
 
     const {blog} = useSelector(state=>state)
     const dispatch = useDispatch();
 
-    console.log(blog);
 
     function onChangeInput(e) {
         dispatch(handleInputChange({
@@ -15,9 +14,14 @@ function AddNewBlog() {
         }))
     }
 
+    function handleTodoSubmit(e) {
+        e.preventDefault();
+        dispatch(handleAddTodo());
+    }
+
   return (
     <div>
-       <form className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
+       <form onSubmit={handleTodoSubmit} className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
     <div className="mb-4">
         <label 
             htmlFor="title" 
